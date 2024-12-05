@@ -34,7 +34,7 @@ function App() {
         <Navbar/>
           <Routes>
             <Route path="/" element={<Home/>} exact />
-            <Route path="/post" element={<CreatePost />} exact />
+            <Route path="/posts" element={<CreatePost />} exact />
           </Routes>
         </BrowserRouter>
         </Wrapper>
