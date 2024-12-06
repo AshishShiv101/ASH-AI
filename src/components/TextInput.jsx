@@ -25,6 +25,7 @@ const OutlinedInput = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+
   &:focus-within {
     border-color: ${({ theme }) => theme.primary};
   }
@@ -37,37 +38,38 @@ const Input = styled.input`
   border: none;
   background-color: transparent;
   color: ${({ theme }) => theme.text_secondary};
+
   &:focus {
     outline: none;
   }
 `;
 
 const TextInput = ({
-    label,
-    placeholder,
-    name,
-    value,
-    handelChange,
-    textArea,
-    rows,
-    columns,
+  label,
+  placeholder,
+  name,
+  value,
+  onChange, // Corrected prop name
+  textArea,
+  rows,
+  columns,
 }) => {
-    return (
-        <Container>
-            <Label>{label}</Label>
-            <OutlinedInput>
-                <Input
-                    as={textArea ? "textarea" : "input"}
-                    name={name}
-                    rows={rows}
-                    columns={columns}
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={(e) => handelChange(e)}
-                />
-            </OutlinedInput>
-        </Container>
-    );
+  return (
+    <Container>
+      <Label>{label}</Label>
+      <OutlinedInput>
+        <Input
+          as={textArea ? "textarea" : "input"}
+          name={name}
+          rows={rows}
+          columns={columns}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange} // Updated handler
+        />
+      </OutlinedInput>
+    </Container>
+  );
 };
 
 export default TextInput;
