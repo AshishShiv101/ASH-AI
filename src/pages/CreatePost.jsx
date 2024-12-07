@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import React, { useState } from 'react';
+import styled from 'styled-components';
 import GeneratorImageForm from '../components/GeneratorImageForm';
-import GenerateImageCard from '../components/GenerateImageCard.jsx'
+import GenerateImageCard from '../components/GenerateImageCard.jsx';
+
 const Container = styled.div`
   height: 100%;
   overflow-y: auto;
@@ -33,38 +34,43 @@ const HeadLine = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width:100%;
+  width: 100%;
   height: fit-content;
-  gap:8%;
+  gap: 8%;
   max-width: 1400px;
   padding: 32px 0;
   display: flex;
   justify-content: center;
-  @media (max-width: 768px){
+
+  @media (max-width: 768px) {
     flex-direction: column;
   }
 `;
 
 const CreatePost = () => {
-  const [generateImageLoading,setGenerateImageLoading] = useState(false);
-  const [ createPostLoading, setCreatePostLoading] = useState(false);
+  const [generateImageLoading, setGenerateImageLoading] = useState(false);
+  const [createPostLoading, setCreatePostLoading] = useState(false);
   const [post, setPost] = useState({
-    author:"",
-    prompt:"",
-    photo:"",
-  })
+    name: '',
+    prompt: '',
+    photo: '',
+  });
+
   return (
     <Container>
-    <Wrapper>
-      <GeneratorImageForm post={post} setPost={setPost} 
-      createPostLoading={createPostLoading}
-      setGenerateImageLoading={generateImageLoading}
-      setCreatePostLoading={setCreatePostLoading}
-       />
-      <GenerateImageCard src={post?.photo} loading={generateImageLoading}/>
+      <Wrapper>
+        <GeneratorImageForm
+          post={post}
+          setPost={setPost}
+          generateImageLoading={generateImageLoading}
+          setGenerateImageLoading={setGenerateImageLoading}
+          createPostLoading={createPostLoading}
+          setCreatePostLoading={setCreatePostLoading}
+        />
+        <GenerateImageCard src={post.photo} loading={generateImageLoading} />
       </Wrapper>
     </Container>
-  )
-}
+  );
+};
 
-export default CreatePost
+export default CreatePost;
