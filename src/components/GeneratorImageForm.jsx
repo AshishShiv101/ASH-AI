@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Button from './button.js';
 import { AutoAwesome, CreateRounded } from '@mui/icons-material';
 import TextInput from '../components/TextInput';
+import { GenerateAIImage } from '../api/index.js';
 
 const Form = styled.div`
   flex: 1;
@@ -91,15 +92,20 @@ const GeneratorImageForm = ({
   createPostLoading,
   setCreatePostLoading,
 }) => {
-  const generateImageFun = () => {
+  const generateImageFun = async () => {
     setGenerateImageLoading(true);
-    // Simulate async operation, reset after 2 seconds
     setTimeout(() => setGenerateImageLoading(false), 2000);
+    await GenerateAIImage({ prompt: post.prompt }).then(res => {
+      setPost({...post, photo: `data:image/jpeg;base64,${res?.data?.photo}` });
+      setGenerateImageLoading(false);
+    }).catch((error) =>{
+      console.log('Error:', error);
+    })
+
   };
 
   const createPostFun = () => {
     setCreatePostLoading(true);
-    // Simulate async operation, reset after 2 seconds
     setTimeout(() => setCreatePostLoading(false), 2000);
   };
 
