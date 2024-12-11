@@ -1,5 +1,6 @@
 import { Configuration, OpenAIApi } from "openai";
 import * as dotenv from "dotenv";
+import axios from "axios";
 dotenv.config();
 
 const configuration = new Configuration({
@@ -17,17 +18,16 @@ export const generateImage = async (req, res, next) => {
             return res.status(400).json({ message: "Prompt is required to generate an image." });
         }
 
-        // Generate image with OpenAI
-        const response = await openai.createImage({
-            prompt,
-            n: 1,
-            size: "1024x1024",  // You can adjust this size as per your need
+        const response = await axios.get(`https://image.pollinations.ai/prompt/${prompt}`, {
+            responseType: 'arraybuffer', // Important for binary image data
         });
 
-        // Assuming the OpenAI response contains an image URL, extract it
-        const generatedImage = response.data.data[0].url;
+        const base64Image = Buffer.from(response.data, 'binary').toString('base64');
+        const imageBase64Url = `data:image/jpeg;base64,${base64Image}`;
 
-        return res.status(200).json({ photo: generatedImage });
+        return res.status(200).json({ photo: imageBase64Url });
+
+
     } catch (error) {
         console.error("Error generating image:", error);
         const errorMessage = error?.response?.data?.error?.message || error.message || "An unexpected error occurred.";

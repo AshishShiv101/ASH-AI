@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Button from './button.js';
+import Button from './button.js'; 
 import { AutoAwesome, CreateRounded } from '@mui/icons-material';
 import TextInput from '../components/TextInput';
 import { GenerateAIImage } from '../api/index.js';
@@ -94,14 +94,14 @@ const GeneratorImageForm = ({
 }) => {
   const generateImageFun = async () => {
     setGenerateImageLoading(true);
-    setTimeout(() => setGenerateImageLoading(false), 2000);
-    await GenerateAIImage({ prompt: post.prompt }).then(res => {
-      setPost({...post, photo: `data:image/jpeg;base64,${res?.data?.photo}` });
+    try {
+      const res = await GenerateAIImage({ prompt: post.prompt });
+      setPost({ ...post, photo: `${res?.photo}` });
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
       setGenerateImageLoading(false);
-    }).catch((error) =>{
-      console.log('Error:', error);
-    })
-
+    }
   };
 
   const createPostFun = () => {
@@ -136,7 +136,6 @@ const GeneratorImageForm = ({
       <Actions>
         <Button
           text="Generate Image"
-          flex
           leftIcon={<AutoAwesome />}
           isLoading={generateImageLoading}
           isDisabled={!post.prompt}
@@ -144,7 +143,6 @@ const GeneratorImageForm = ({
         />
         <Button
           text="Post Image"
-          flex
           type="secondary"
           leftIcon={<CreateRounded />}
           isLoading={createPostLoading}

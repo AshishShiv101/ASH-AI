@@ -46,7 +46,7 @@ const Wrapper = styled.div`
     flex-direction: column;
   }
 `;
-
+ 
 const CreatePost = () => {
   const [generateImageLoading, setGenerateImageLoading] = useState(false);
   const [createPostLoading, setCreatePostLoading] = useState(false);

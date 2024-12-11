@@ -1,13 +1,17 @@
-import { CircularProgress } from "@mui/material";
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
+import { CircularProgress } from '@mui/material';
 
-const Button = styled.div`
+// Use 'as' prop to conditionally exclude props from the DOM
+const StyledButton = styled.div.attrs(({ isDisabled, isLoading }) => ({
+    'aria-disabled': isDisabled || isLoading,
+}))`
   border-radius: 10px;
   color: white;
   font-size: 14px;
   font-weight: 600;
-  cursor: pointer;
+  cursor: ${({ isDisabled, isLoading }) =>
+        isDisabled || isLoading ? 'not-allowed' : 'pointer'};
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -15,68 +19,41 @@ const Button = styled.div`
   gap: 6px;
   height: min-content;
   padding: 10px 24px;
+
   @media (max-width: 600px) {
     padding: 8px 12px;
   }
 
-  ${({ type, theme }) =>
-        type === "secondary"
-            ? `
-  background: ${theme.secondary};
-  `
-            : `
-  background: ${theme.primary};
-`}
-
-  ${({ isDisabled }) =>
-        isDisabled &&
-        `
-  opacity: 0.4;
-  cursor: not-allowed;
-
-  `}
-  ${({ isLoading }) =>
-        isLoading &&
-        `
-    opacity: 0.8;
-  cursor: not-allowed;
-`}
-${({ flex }) =>
-        flex &&
-        `
-    flex: 1;
-`}
+  background: ${({ type, theme }) =>
+        type === 'secondary' ? theme.secondary : theme.primary};
+  opacity: ${({ isDisabled, isLoading }) => (isDisabled || isLoading ? 0.4 : 1)};
 `;
 
-const button = ({
+const Button = ({
     text,
-    isLoading,
-    isDisabled,
-    rightIcon,
+    isLoading = false,
+    isDisabled = false,
     leftIcon,
-    type,
+    rightIcon,
+    type = 'primary',
     onClick,
-    flex,
-}) => {
-    return (
-        <Button
-            onClick={() => !isDisabled && !isLoading && onClick()}
-            isDisabled={isDisabled}
-            type={type}
-            isLoading={isLoading}
-            flex={flex}
-        >
-            {isLoading && (
-                <CircularProgress
-                    style={{ width: "18px", height: "18px", color: "inherit" }}
-                />
-            )}
-            {leftIcon}
-            {text}
-            {isLoading && <> . . .</>}
-            {rightIcon}
-        </Button>
-    );
-};
+}) => (
+    <StyledButton
+        as="button"
+        onClick={() => !isDisabled && !isLoading && onClick?.()}
+        isDisabled={isDisabled}
+        isLoading={isLoading}
+        type={type}
+    >
+        {isLoading && (
+            <CircularProgress
+                style={{ width: '18px', height: '18px', color: 'inherit' }}
+            />
+        )}
+        {!isLoading && leftIcon}
+        {!isLoading && text}
+        {rightIcon}
+    </StyledButton>
+);
 
-export default button;
+export default Button;

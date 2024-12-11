@@ -47,9 +47,8 @@ const connectDB = async () => {
     }
 };
 
-// Server start function
 const startServer = async () => {
-    await connectDB(); // Ensure MongoDB is connected before starting the server
+    await connectDB(); 
     app.listen(8000, () => console.log("Server started on 8000"));
 };
 

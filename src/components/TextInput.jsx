@@ -49,7 +49,7 @@ const TextInput = ({
   placeholder,
   name,
   value,
-  onChange, // Corrected prop name
+  onChange, 
   textArea,
   rows,
   columns,
