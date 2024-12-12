@@ -2,16 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import { CircularProgress } from '@mui/material';
 
-// Use 'as' prop to conditionally exclude props from the DOM
-const StyledButton = styled.div.attrs(({ isDisabled, isLoading }) => ({
-    'aria-disabled': isDisabled || isLoading,
+const StyledButton = styled.button.attrs(({ type }) => ({
+    type: type === 'secondary' ? 'button' : 'submit',
 }))`
   border-radius: 10px;
   color: white;
   font-size: 14px;
   font-weight: 600;
-  cursor: ${({ isDisabled, isLoading }) =>
-        isDisabled || isLoading ? 'not-allowed' : 'pointer'};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -25,24 +23,22 @@ const StyledButton = styled.div.attrs(({ isDisabled, isLoading }) => ({
   }
 
   background: ${({ type, theme }) =>
-        type === 'secondary' ? theme.secondary : theme.primary};
-  opacity: ${({ isDisabled, isLoading }) => (isDisabled || isLoading ? 0.4 : 1)};
+        type === 'secondary' ? theme.primary : theme.secondary};
+  opacity: ${({ disabled }) => (disabled ? 0.4 : 1)};
 `;
 
 const Button = ({
     text,
-    isLoading = false,
-    isDisabled = false,
+    isLoading,
+    disabled,
     leftIcon,
     rightIcon,
     type = 'primary',
     onClick,
 }) => (
     <StyledButton
-        as="button"
-        onClick={() => !isDisabled && !isLoading && onClick?.()}
-        isDisabled={isDisabled}
-        isLoading={isLoading}
+        onClick={() => !disabled && !isLoading && onClick?.()}
+        disabled={disabled}
         type={type}
     >
         {isLoading && (
@@ -50,8 +46,9 @@ const Button = ({
                 style={{ width: '18px', height: '18px', color: 'inherit' }}
             />
         )}
-        {!isLoading && leftIcon}
-        {!isLoading && text}
+        {leftIcon}
+        {text}
+        {isLoading && <> . . .</>}
         {rightIcon}
     </StyledButton>
 );

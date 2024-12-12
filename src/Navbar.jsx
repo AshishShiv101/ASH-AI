@@ -33,7 +33,7 @@ const Navbar = () => {
   return (
     <Container>
       {/* Navbar Title */}
-      <div>GenAI</div>
+      <div>ASH-AI</div>
 
       {/* Conditional Button Rendering */}
       {path[1] === 'posts' ? (

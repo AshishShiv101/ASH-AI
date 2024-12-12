@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Button from './button.js'; 
+import Button from './button.js';
 import { AutoAwesome, CreateRounded } from '@mui/icons-material';
 import TextInput from '../components/TextInput';
-import { GenerateAIImage } from '../api/index.js';
+import { CreatePost,GenerateAIImage } from '../api/index.js';
+
 
 const Form = styled.div`
   flex: 1;
@@ -92,6 +94,8 @@ const GeneratorImageForm = ({
   createPostLoading,
   setCreatePostLoading,
 }) => {
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
   const generateImageFun = async () => {
     setGenerateImageLoading(true);
     try {
@@ -104,11 +108,18 @@ const GeneratorImageForm = ({
     }
   };
 
-  const createPostFun = () => {
+  const createPostFun = async () => {
     setCreatePostLoading(true);
-    setTimeout(() => setCreatePostLoading(false), 2000);
+    await CreatePost(post)
+      .then((res) => {
+        setCreatePostLoading(false);
+        navigate("/");
+      })
+      .catch((error) => {
+        setError(error?.response?.data?.message);
+        setCreatePostLoading(false);
+      });
   };
-
   return (
     <Form>
       <Top>
@@ -138,16 +149,19 @@ const GeneratorImageForm = ({
           text="Generate Image"
           leftIcon={<AutoAwesome />}
           isLoading={generateImageLoading}
-          isDisabled={!post.prompt}
+          disabled={!post.prompt}
           onClick={generateImageFun}
         />
         <Button
           text="Post Image"
+          flex
           type="secondary"
           leftIcon={<CreateRounded />}
           isLoading={createPostLoading}
-          isDisabled={!post.name || !post.prompt || !post.photo}
-          onClick={createPostFun}
+          disabled={
+            post.name === "" || post.prompt === "" || post.photo === ""
+          }
+          onClick={() => createPostFun()}
         />
       </Actions>
     </Form>

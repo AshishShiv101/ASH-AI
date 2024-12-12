@@ -5,26 +5,12 @@ const API = axios.create({
 });
 
 // Function to get posts
-export const GetPosts = async () => {
-    try {
-        const response = await API.get("/post/");
-        return response.data;  // Return data from the response
-    } catch (error) {
-        console.error("Error fetching posts:", error);
-        throw error;  // Rethrow error to be handled by calling function
-    }
-};
+export const GetPosts = async () => await API.get("/post/");
+
 
 // Function to create a post
-export const CreatePost = async (data) => {
-    try {
-        const response = await API.post("/post/", data);
-        return response.data;  // Return data from the response
-    } catch (error) {
-        console.error("Error creating post:", error);
-        throw error;  // Rethrow error to be handled by calling function
-    }
-};
+export const CreatePost = async (data) => await API.post("/post/", data);
+
 
 // Function to generate an AI image
 export const GenerateAIImage = async (data) => {
