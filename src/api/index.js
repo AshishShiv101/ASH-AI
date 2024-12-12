@@ -1,24 +1,31 @@
-import axios from "axios";
+import { GetPosts, CreatePost, GenerateAIImage } from "./api";
 
-const API = axios.create({
-    baseURL: "https://ash-ai.onrender.com/api/",
-});
-
-// Function to get posts
-export const GetPosts = async () => await API.get("/post/");
-
-
-// Function to create a post
-export const CreatePost = async (data) => await API.post("/post/", data);
-
-
-// Function to generate an AI image
-export const GenerateAIImage = async (data) => {
+// Fetch all posts
+const fetchPosts = async () => {
     try {
-        const response = await API.post("/generateImage/", data);
-        return response.data;  // Return data from the response
+        const posts = await GetPosts();
+        console.log("Fetched posts:", posts);
     } catch (error) {
-        console.error("Error generating AI image:", error);
-        throw error;  // Rethrow error to be handled by calling function
+        console.error("Failed to fetch posts:", error);
+    }
+};
+
+// Create a new post
+const createNewPost = async (postData) => {
+    try {
+        const newPost = await CreatePost(postData);
+        console.log("Created post:", newPost);
+    } catch (error) {
+        console.error("Failed to create post:", error);
+    }
+};
+
+// Generate an AI image
+const generateImage = async (imageData) => {
+    try {
+        const aiImage = await GenerateAIImage(imageData);
+        console.log("Generated AI Image:", aiImage);
+    } catch (error) {
+        console.error("Failed to generate AI image:", error);
     }
 };
