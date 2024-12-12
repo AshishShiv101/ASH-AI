@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: "https://ash-ai.onrender.com/",
+    baseURL: "https://ash-ai.onrender.com",
 });
 
 // Function to get posts
