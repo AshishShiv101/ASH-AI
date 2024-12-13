@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import SearchBar from '../components/SearchBar';
-import ImageCard from '../components/ImageCard';
-import { CircularProgress } from '@mui/material';
-import { GetPosts } from '../api';
+import SearchBar from "../components/SearchBar";
+import ImageCard from "../components/ImageCard";
+import { CircularProgress } from "@mui/material";
+import { GetPosts } from "../api";
 
+// Styled Components
 const Container = styled.div`
   height: 100%;
   overflow-y: auto;
@@ -67,46 +68,52 @@ const CardWrapper = styled.div`
   }
 `;
 
+// Main Component
 const Home = () => {
-  const [search, setSearch] = useState('');                        
+  const [search, setSearch] = useState("");
   const [posts, setPosts] = useState([]);
-  const [ loading,setLoading] = useState(false);
-  const [ error, setError] = useState(false);
-  const [filterPosts, setFilterPosts] = useState([]);
- 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [filteredPosts, setFilteredPosts] = useState([]);
+
+  // Fetch Posts
   const getPosts = async () => {
     setLoading(true);
+    setError(""); 
     try {
       const res = await GetPosts();
-      const fetchedPosts = res?.data?.data || [];
+      const fetchedPosts = res?.data || [];
       setPosts(fetchedPosts);
-      setFilterPosts(fetchedPosts);
-    } catch (error) {
-      setError(error?.response?.data?.error?.message || error.message);
+      setFilteredPosts(fetchedPosts);
+    } catch (err) {
+      const errorMessage =
+        err?.response?.data?.error?.message || err.message || "Error fetching posts.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-
+  // Fetch posts on component mount
   useEffect(() => {
     getPosts();
   }, []);
 
+  // Filter posts based on search query
   useEffect(() => {
-    if(!search){
-      setFilterPosts(posts)
-    }
-    const SearchFilteredPosts = posts.filter((post) =>{
-      const promptMatch = post?.prompt?.toLowerCase().includes(search.toString().toLowerCase());
-      const authorMatch = post?.name?.toLowerCase().includes(search.toString().toLowerCase());
-      return promptMatch || authorMatch 
-    });
-    if(search){
-      setFilterPosts(SearchFilteredPosts)
+    if (!search) {
+      setFilteredPosts(posts);
+    } else {
+      const filtered = posts.filter((post) => {
+        const searchLower = search.toLowerCase();
+        return (
+          post?.prompt?.toLowerCase().includes(searchLower) ||
+          post?.name?.toLowerCase().includes(searchLower)
+        );
+      });
+      setFilteredPosts(filtered);
     }
   }, [posts, search]);
-
 
   return (
     <Container>
@@ -114,24 +121,22 @@ const Home = () => {
       <Span>Generated with AI</Span>
       <SearchBar search={search} setSearch={setSearch} />
       <Wrapper>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
+        {error && <div style={{ color: "red", textAlign: "center" }}>{error}</div>}
         {loading ? (
           <CircularProgress />
         ) : (
           <CardWrapper>
-            {filterPosts?.length === 0 ? (
-              <>No posts Found</>
+            {filteredPosts.length === 0 ? (
+              <div>No posts found. Please try again later.</div>
             ) : (
-              <>
-                {filterPosts?.slice().reverse().map((item, index) => (
-                  <ImageCard key={index} item={item} />
-                ))}
-              </>
+              filteredPosts
+                .slice()
+                .reverse()
+                .map((item, index) => <ImageCard key={index} item={item} />)
             )}
           </CardWrapper>
         )}
       </Wrapper>
-
     </Container>
   );
 };
