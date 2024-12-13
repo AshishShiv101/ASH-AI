@@ -29,15 +29,12 @@ export const createPost = async (req, res, next) => {
     try {
         const { name, prompt, photo } = req.body;
 
-        // Validate input
         if (!name || !prompt || !photo) {
             return res.status(400).json({ message: "Name, prompt, and photo are required." });
         }
 
-        // Upload photo to Cloudinary
         const photoUrl = await cloudinary.uploader.upload(photo);
 
-        // Create a new post in the database
         const newPost = await Post.create({
             name,
             prompt,
